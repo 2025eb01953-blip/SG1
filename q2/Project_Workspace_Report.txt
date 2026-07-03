@@ -1,0 +1,87 @@
+Secure Project Workspace Report
+===============================
+
+Date: 2026-07-03
+Target directory: /workspaces/SG1/q2/secure_workspace
+
+1) Directory structure created
+Command:
+mkdir -p secure_workspace/{docs,src,logs}
+
+touch secure_workspace/docs/plan.txt secure_workspace/src/app.txt secure_workspace/logs/activity.log
+
+Output:
+Created directories:
+- secure_workspace/docs
+- secure_workspace/src
+- secure_workspace/logs
+
+Created files:
+- secure_workspace/docs/plan.txt
+- secure_workspace/src/app.txt
+- secure_workspace/logs/activity.log
+
+Observation:
+A structured project workspace was created with separate folders for documentation, source files, and logs.
+
+2) Permissions before modification
+Command:
+ls -ld secure_workspace secure_workspace/docs secure_workspace/src secure_workspace/logs secure_workspace/docs/plan.txt secure_workspace/src/app.txt secure_workspace/logs/activity.log
+
+Output:
+drwxrwxrwx+ 5 codespace codespace 4096 Jul  3 19:03 secure_workspace
+drwxrwxrwx+ 2 codespace codespace 4096 Jul  3 19:03 secure_workspace/docs
+-rw-rw-rw-  1 codespace codespace    0 Jul  3 19:03 secure_workspace/docs/plan.txt
+drwxrwxrwx+ 2 codespace codespace 4096 Jul  3 19:03 secure_workspace/logs
+-rw-rw-rw-  1 codespace codespace    0 Jul  3 19:03 secure_workspace/logs/activity.log
+drwxrwxrwx+ 2 codespace codespace 4096 Jul  3 19:03 secure_workspace/src
+-rw-rw-rw-  1 codespace codespace    0 Jul  3 19:03 secure_workspace/src/app.txt
+
+Observation:
+The initial permissions were very open, which would allow unnecessary access to project content.
+
+3) Permissions after modification
+Command:
+chmod 750 secure_workspace secure_workspace/docs secure_workspace/src secure_workspace/logs
+chmod 640 secure_workspace/docs/plan.txt secure_workspace/src/app.txt secure_workspace/logs/activity.log
+
+Output:
+drwxr-x---+ 5 codespace codespace 4096 Jul  3 19:03 secure_workspace
+drwxr-x---+ 2 codespace codespace 4096 Jul  3 19:03 secure_workspace/docs
+drwxr-x---+ 2 codespace codespace 4096 Jul  3 19:03 secure_workspace/logs
+drwxr-x---+ 2 codespace codespace 4096 Jul  3 19:03 secure_workspace/src
+-rw-r-----  1 codespace codespace    0 Jul  3 19:03 secure_workspace/docs/plan.txt
+-rw-r-----  1 codespace codespace    0 Jul  3 19:03 secure_workspace/logs/activity.log
+-rw-r-----  1 codespace codespace    0 Jul  3 19:03 secure_workspace/src/app.txt
+
+Observation:
+The workspace was restricted so that the owner can read and write while the group can read, and others have no access.
+
+4) Ownership details
+Command:
+stat -c '%n %U:%G %a' secure_workspace secure_workspace/docs secure_workspace/src secure_workspace/logs secure_workspace/docs/plan.txt secure_workspace/src/app.txt secure_workspace/logs/activity.log
+
+Output:
+secure_workspace codespace:codespace 750
+secure_workspace/docs codespace:codespace 750
+secure_workspace/src codespace:codespace 750
+secure_workspace/logs codespace:codespace 750
+secure_workspace/docs/plan.txt codespace:codespace 640
+secure_workspace/src/app.txt codespace:codespace 640
+secure_workspace/logs/activity.log codespace:codespace 640
+
+Observation:
+All files and directories are owned by the current user, which keeps management simple and consistent for the project team.
+
+5) Umask value used
+Command:
+umask
+
+Output:
+0022
+
+Observation:
+The default umask of 0022 produces standard permissions for newly created files and directories.
+
+6) Explanation of how permissions protect project data
+The permissions restrict access to only the owner and the group, while preventing other users from reading or modifying the project files. This helps protect confidential project documentation and source content from accidental or unauthorized access.

@@ -1,0 +1,74 @@
+Storage Assessment Report
+=========================
+
+Date: 2026-07-03
+Working directory: /workspaces/SG1/q5
+
+1) Available storage devices
+Command:
+lsblk
+
+Output:
+NAME    MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS
+loop0     7:0    0 91.7M  1 loop
+loop1     7:1    0 49.3M  1 loop
+loop2     7:2    0 63.8M  1 loop
+loop3     7:3    0 257G  0 loop
+sda       8:0    0   30G  0 disk
+├─sda1    8:1    0 29.9G  0 part /workspaces/.codespaces/shared
+├─sda14   8:14   0    4M  0 part
+└─sda15   8:15   0  106M  0 part
+sdb       8:16   0   45G  0 disk
+└─sdb1    8:17   0   45G  0 part /tmp
+sdc       8:32   0  512G  0 disk
+└─sdc1    8:33   0  512G  0 part
+
+Observation:
+The system exposes several block devices, including the main system disk and additional storage devices that may be used for future deployment needs.
+
+2) Mounted file systems
+Command:
+mount | head
+
+Output:
+overlay on / type overlay (rw,relatime,...)
+proc on /proc type proc (rw,nosuid,nodev,noexec,relatime)
+tmpfs on /dev type tmpfs (rw,nosuid,size=65536k,mode=755,inode64)
+/dev/sdb1 on /tmp type ext4 (rw,relatime)
+
+Observation:
+The container has a layered overlay filesystem and a separate ext4 filesystem mounted on /tmp.
+
+3) Disk usage statistics
+Command:
+df -h
+
+Output:
+Filesystem      Size  Used Avail Use% Mounted on
+overlay          32G  9.6G   21G  33% /
+tmpfs            64M     0   64M   0% /dev
+/dev/root        29G   24G  5.4G  82% /vscode
+/dev/sdb1        44G  2.7G   40G   7% /tmp
+/dev/loop4       32G  9.6G   21G  33% /workspaces
+
+Observation:
+The root filesystem still has moderate free space, while /tmp and /workspaces have ample available capacity.
+
+4) Inode utilization
+Command:
+df -i
+
+Output:
+Filesystem      Inodes  IUsed   IFree IUse% Mounted on
+overlay        2097152 203058 1894094   10% /
+tmpfs          1016899    213 1016686    1% /dev
+/dev/root      3870720 243653 3627067    7% /vscode
+/dev/sdb1      2949120     37 2949083    1% /tmp
+/dev/loop4     2097152 203058 1894094   10% /workspaces
+
+Observation:
+Inode usage is currently low, so the system is not close to exhausting file entries.
+
+5) Storage health observations and recommendations
+The storage layout appears healthy and has enough free space for a new application server, though the root filesystem is more heavily used than the other mounted points. I recommend monitoring disk usage regularly, placing application data on dedicated storage if the workload grows, and cleaning temporary files on /tmp to maintain efficient utilization.
+

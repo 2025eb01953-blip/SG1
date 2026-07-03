@@ -1,0 +1,68 @@
+Environment Verification Report
+=============================
+
+Date: 2026-07-03
+User: codespace
+Workspace: /workspaces/SG1/q1
+
+1) Username and groups
+Command:
+whoami
+
+groups
+
+Output:
+codespace
+codespace pipx python oryx golang docker sdkman rvm php conda nvs nvm hugo ssh
+
+Observation:
+The active Linux user is codespace and the account belongs to several supplementary groups used for development tools and services.
+
+2) Current shell
+Command:
+echo "$SHELL"
+
+Output:
+/bin/bash
+
+Observation:
+The shell in use is Bash, which is the default shell for this environment.
+
+3) Current working directory
+Command:
+pwd
+
+Output:
+/workspaces/SG1/q1
+
+Observation:
+The terminal is currently operating inside the q1 directory of the lab workspace.
+
+4) Workspace contents
+Command:
+ls -la /workspaces/SG1
+
+Output:
+total 36
+drwxrwxrwx+ 8 codespace root      4096 Jul  3 18:07 .
+drwxr-xrwx+ 5 codespace root      4096 Jul  3 17:58 ..
+drwxrwxrwx+ 8 codespace root      4096 Jul  3 19:01 .git
+-rw-rw-rw-  1 codespace root         5 Jul  3 17:58 README.md
+drwxrwxrwx+ 2 codespace codespace 4096 Jul  3 18:07 q1
+drwxrwxrwx+ 3 codespace codespace 4096 Jul  3 18:48 q2
+drwxrwxrwx+ 2 codespace codespace 4096 Jul  3 18:52 q3
+drwxrwxrwx+ 2 codespace codespace 4096 Jul  3 18:53 q4
+drwxrwxrwx+ 2 codespace codespace 4096 Jul  3 18:07 q5
+
+Observation:
+The workspace contains the main repository folders and the five question directories required for the lab.
+
+5) Network connectivity verification
+Command:
+curl -s --max-time 10 https://youtube.com > /dev/null && echo "Network: youtube.com reachable"
+
+Output:
+Network: youtube.com reachable
+
+Observation:
+The environment can reach the specified network endpoint successfully within the timeout window.

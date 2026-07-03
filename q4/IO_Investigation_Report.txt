@@ -1,0 +1,70 @@
+I/O Investigation Report
+========================
+
+Date: 2026-07-03
+Working directory: /workspaces/SG1/q4
+
+1) Open files identified
+Command:
+lsof -p $$ | grep -E 'app\.log|FD'
+
+Output:
+COMMAND   PID      USER   FD   TYPE DEVICE SIZE/OFF    NODE NAME
+bash    37803 codespace    3r   REG    7,4       16 1310806 /workspaces/SG1/q4/app.log
+
+Observation:
+The shell currently has the file app.log open as file descriptor 3 for read access.
+
+2) File descriptor observations
+Command:
+ls -l /proc/$$/fd
+
+Output:
+total 0
+lrwx------ 1 codespace codespace 64 Jul  3 19:03 0 -> /dev/pts/5
+lrwx------ 1 codespace codespace 64 Jul  3 19:03 1 -> /dev/pts/5
+lrwx------ 1 codespace codespace 64 Jul  3 19:03 2 -> /dev/pts/5
+lrwx------ 1 codespace codespace 64 Jul  3 19:03 255 -> /dev/pts/5
+lr-x------ 1 codespace codespace 64 Jul  3 19:03 3 -> /workspaces/SG1/q4/app.log
+l-wx------ 1 codespace codespace 64 Jul  3 19:03 6 -> /dev/null
+
+Observation:
+The shell uses standard input, output, and error descriptors for the terminal, and file descriptor 3 is linked to the log file.
+
+3) Output redirection and error redirection results
+Command:
+ls -l > stdout.txt
+ls /not_a_real_path 2> stderr.txt
+
+Output:
+stdout.txt created with directory listing information.
+stderr.txt contains the error message from the missing path.
+
+Observation:
+Standard output was redirected to stdout.txt and standard error was redirected to stderr.txt, which separated normal output from error output.
+
+4) Combined redirection
+Command:
+(ls -l && ls /not_a_real_path) > combined.txt 2>&1
+
+Output:
+combined.txt contains both the directory listing and the error message.
+
+Observation:
+The `2>&1` redirection merged standard error into standard output so both streams appear in the same file.
+
+5) Resource limits observed
+Command:
+ulimit -a
+
+Output:
+open files                          (-n) 524288
+stack size                  (kbytes, -s) 8192
+file size                   (blocks, -f) unlimited
+max user processes                  (-u) unlimited
+
+Observation:
+The shell has a high limit for open files, which means it can handle many descriptors efficiently for applications and scripts.
+
+6) Explanation of Linux file I/O management
+Linux uses file descriptors as integer handles for open files, sockets, pipes, and terminals. Redirection and the `/proc` filesystem make it possible to inspect and control these streams precisely.

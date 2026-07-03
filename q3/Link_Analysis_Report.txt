@@ -1,0 +1,48 @@
+Link Analysis Report
+====================
+
+Date: 2026-07-03
+Working directory: /workspaces/SG1/q3
+
+1) Inode numbers of all files
+Command:
+ls -li original.txt hardlink.txt symlink.txt
+
+Output:
+1310804 -rw-rw-rw- 2 codespace codespace 21 Jul  3 19:03 hardlink.txt
+1310804 -rw-rw-rw- 2 codespace codespace 21 Jul  3 19:03 original.txt
+1310805 lrwxrwxrwx 1 codespace codespace 12 Jul  3 19:03 symlink.txt -> original.txt
+
+Observation:
+The regular file and its hard link share the same inode number, while the symbolic link has a different inode.
+
+2) Metadata collected
+Command:
+stat original.txt hardlink.txt symlink.txt
+
+Output:
+original.txt inode: 1310804, links: 2
+hardlink.txt inode: 1310804, links: 2
+symlink.txt inode: 1310805, links: 1
+
+Observation:
+The hard link is a second name for the same inode, while the symbolic link points to the target pathname.
+
+3) Comparison between hard link and symbolic link
+Hard links and symbolic links behave differently. A hard link shares the same inode and data as the original file, while a symbolic link is a separate file that contains a reference to the target path.
+
+4) Effect of deleting the original file
+Command:
+rm original.txt
+cat hardlink.txt
+cat symlink.txt
+
+Output:
+Linux link test file
+cat: symlink.txt: No such file or directory
+
+Observation:
+Deleting the original filename did not remove the file content because the hard link still points to the same inode. The symbolic link became broken because its target path no longer existed.
+
+5) Conclusions drawn
+The experiment shows that hard links preserve file contents after the original name is removed, while symbolic links depend on the existence of the referenced target. This difference is important when managing files and backups.
